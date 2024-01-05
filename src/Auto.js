@@ -57,6 +57,7 @@ export function Auto(props) {
     return (
         <section>
             {isEditing ? (
+                // modal van maken om te editen //
                 <form>
                     <input type="text" value={auto.brand} name="brand" onChange={handleChange}/><br/>
                     <input type="text" value={auto.model} name="model" onChange={handleChange}/><br/>
