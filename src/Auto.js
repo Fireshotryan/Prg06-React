@@ -67,13 +67,20 @@ export function Auto(props) {
                     <button onClick={handleCancel}>CANCEL</button>
                 </form>
             ) : (
-                <div class="auto">
-                    <h2 class="autoBrand">{auto.brand}</h2>
-                    <Link to={"autos/" + props.auto.id}>Read more</Link><br/>
-                    <button onClick={handleEdit}>EDIT</button>
-                    <br/>
-                    <button onClick={deleteAuto}>DELETE</button>
+                <div className="auto bg-gray-200 p-4 rounded-md shadow-md">
+                <h2 className="text-2xl font-bold mb-2">{auto.brand}</h2>
+                <Link to={"autos/" + props.auto.id} className="text-blue-500 hover:underline">
+                  Read more
+                </Link>
+                <div className="mt-2 space-x-2">
+                  <button onClick={handleEdit} className="btn-primary">
+                    EDIT
+                  </button>
+                  <button onClick={deleteAuto} className="btn-danger">
+                    DELETE
+                  </button>
                 </div>
+              </div>
             )}
         </section>
     );
