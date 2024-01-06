@@ -165,8 +165,7 @@ export function Auto({ auto, autosRefreshHandler }) {
           <div className="modal">
             <h2 className="text-2xl font-bold mb-4">Confirm Deletion</h2>
             <p>
-              Are you sure you want to delete the auto with the following
-              details?
+              Weet je zeker dat je dit wilt verwijderen?
             </p>
             <ul>
               <li>
