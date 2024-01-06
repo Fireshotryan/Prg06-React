@@ -1,5 +1,4 @@
-import { Outlet } from "react-router";
-import { Link } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import "./App.css";
 import "./tailwind.css";
 
@@ -8,7 +7,9 @@ export function Layout() {
     <div className="min-h-screen flex flex-col">
       <header className="bg-blue-500 text-white py-4 flex items-center justify-center">
         {/* Center content vertically and horizontally */}
-        <h1 className="text-2xl font-bold">Auto's</h1>
+        <Link to="/" className="text-white text-2xl font-bold hover:underline">
+          Auto's
+        </Link>
       </header>
       <nav className="bg-gray-200 p-4">
         <ul className="flex space-x-4 justify-center">
