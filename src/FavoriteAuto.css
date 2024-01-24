@@ -1,0 +1,32 @@
+/* Add these styles to your existing FavoriteAuto.css or create a new one */
+.fade-enter {
+    opacity: 0.01;
+  }
+  
+  .fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: opacity 300ms ease-in;
+  }
+  
+  .fade-exit {
+    opacity: 1;
+  }
+  
+  .fade-exit.fade-exit-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+  }
+  
+  .alert-message {
+    background-color: #4caf50; /* Green background color */
+    color: white; /* White text color */
+    padding: 15px; /* Padding */
+    margin-bottom: 20px; /* Bottom margin */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.9s ease-in-out; /* Transition effect for opacity */
+  }
+  
+  .alert-message.show {
+    opacity: 1; /* Show when 'show' class is present */
+  }
+  
