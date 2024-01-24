@@ -57,7 +57,12 @@ export function NieuweAuto(props) {
 
   return (
     <section className="container mx-auto mt-8">
+      
       <form className="max-w-md mx-auto">
+               {/* Success message transition */}
+               <CSSTransition in={showMessage} timeout={300} classNames="fade" unmountOnExit>
+          <div className="success-message">Auto created!</div>
+        </CSSTransition>
         <h2 className="text-3xl font-bold mb-4">Nieuwe Auto</h2>
         <div className="mb-4">
           <label htmlFor="brand" className="block text-sm font-medium text-gray-600">
@@ -138,11 +143,6 @@ export function NieuweAuto(props) {
         <button onClick={saveAuto} className="btn-primary">
           SAVE
         </button>
-
-        {/* Success message transition */}
-        <CSSTransition in={showMessage} timeout={300} classNames="fade" unmountOnExit>
-          <div className="success-message">Auto created!</div>
-        </CSSTransition>
       </form>
     </section>
   );
