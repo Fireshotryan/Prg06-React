@@ -23,6 +23,7 @@ export function Layout() {
               Nieuwe Auto
             </Link>
           </li>
+          <li>   <Link to="/favorites" className="text-blue-500 hover:underline">Favorites</Link></li>
         </ul>
       </nav>
       <div className="flex-1 flex flex-wrap justify-center p-4">

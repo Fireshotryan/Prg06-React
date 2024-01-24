@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Auto } from "./Auto";
-import { NieuweAuto } from "./NieuweAuto";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./Layout";
 import { Error } from "./Error";
 import { AutoDetail } from "./AutoDetail";
+import { NieuweAuto } from "./NieuweAuto";
+import { Auto } from "./Auto";
+import { FavoriteAuto } from "./FavoriteAuto"; // Import the FavoriteAuto component
 import "./App.css";
 
 const URI_COLLECTION = "http://145.24.222.71:8000/autos";
@@ -16,6 +17,7 @@ export function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [yearRange, setYearRange] = useState({ min: 1990, max: 2024 });
+  const [favorites, setFavorites] = useState(new Set());
 
   const fetchData = async () => {
     try {
@@ -31,6 +33,25 @@ export function App() {
     fetchData();
   }, []);
 
+  const toggleFavorite = (autoId) => {
+    const newFavorites = new Set(favorites);
+
+    if (newFavorites.has(autoId)) {
+      newFavorites.delete(autoId);
+    } else {
+      newFavorites.add(autoId);
+    }
+
+    setFavorites(newFavorites);
+  };
+
+
+  const removeFromFavorites = (autoId) => {
+    const newFavorites = new Set(favorites);
+    newFavorites.delete(autoId);
+    setFavorites(newFavorites);
+  };
+
   const filteredAutos = autos.filter((auto) => {
     const matchesSearch = auto.brand.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesColor = selectedColor ? auto.color.toLowerCase() === selectedColor.toLowerCase() : true;
@@ -43,7 +64,13 @@ export function App() {
   const autosForPage = filteredAutos.slice(startIndex, endIndex);
 
   const showAutos = autosForPage.map((value) => (
-    <Auto key={value.id} auto={value} autosRefreshHandler={fetchData} />
+    <Auto
+      key={value.id}
+      auto={value}
+      autosRefreshHandler={fetchData}
+      toggleFavorite={toggleFavorite}
+      favorites={favorites}
+    />
   ));
 
   const totalPages = Math.ceil(filteredAutos.length / itemsPerPage);
@@ -87,9 +114,9 @@ export function App() {
     setCurrentPage(1);
   };
 
-const fixedElementHeight = "40px";
+  const fixedElementHeight = "40px";
 
-return (
+  return (
     <BrowserRouter>
       <Routes>
         <Route
@@ -115,31 +142,29 @@ return (
                     className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
                   >
                     <option value="">All Colors</option>
-                    {/* Replace the following colors with your actual color options */}
                     <option value="red">Red</option>
                     <option value="blue">Blue</option>
                     <option value="green">Green</option>
-                    {/* ... (add more colors) */}
                   </select>
                 </div>
 
                 {/* Year Range Search */}
                 <div className="flex justify-center my-4" style={{ height: fixedElementHeight }}>
-  <label className="text-lg font-bold mr-2">Select Year:</label>
-  <select
-    value={yearRange.min === 1990 && yearRange.max === 2024 ? "All Years" : yearRange.min}
-    onChange={handleYearChange}
-    name="min"
-    className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
-  >
-    <option value="All Years">All Years</option>
-    {[...Array(2025 - 1990).keys()].map((i) => (
-      <option key={1990 + i} value={1990 + i}>
-        {1990 + i}
-      </option>
-    ))}
-  </select>
-</div>
+                  <label className="text-lg font-bold mr-2">Select Year:</label>
+                  <select
+                    value={yearRange.min === 1990 && yearRange.max === 2024 ? "All Years" : yearRange.min}
+                    onChange={handleYearChange}
+                    name="min"
+                    className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="All Years">All Years</option>
+                    {[...Array(2025 - 1990).keys()].map((i) => (
+                      <option key={1990 + i} value={1990 + i}>
+                        {1990 + i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 {/* Pagination */}
                 <div className="flex justify-center my-4" style={{ height: fixedElementHeight }}>
@@ -181,6 +206,16 @@ return (
                 {/* Autos */}
                 {showAutos}
               </>
+            }
+          />
+   <Route
+            path="favorites"
+            element={
+              <FavoriteAuto
+                favorites={favorites}
+                autos={autos}
+                autosRefreshHandler={removeFromFavorites}
+              />
             }
           />
           <Route path="create" element={<NieuweAuto autosRefreshHandler={fetchData} />} />

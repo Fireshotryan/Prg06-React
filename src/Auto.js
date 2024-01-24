@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
 
-export function Auto({ auto, autosRefreshHandler }) {
+export function Auto({ auto, autosRefreshHandler, toggleFavorite, favorites }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [editedAuto, setEditedAuto] = useState(auto);
@@ -60,6 +60,11 @@ export function Auto({ auto, autosRefreshHandler }) {
   const cancelDelete = () => {
     setIsDeleting(false);
   };
+
+  const handleFavorite = () => {
+    toggleFavorite(auto.id);
+  };
+
 
   return (
     <div key={auto.id} className="w-full md:w-1/2 lg:w-1/3 p-4">
@@ -163,6 +168,9 @@ export function Auto({ auto, autosRefreshHandler }) {
             </button>
             <button onClick={handleDelete} className="btn-danger">
               DELETE
+            </button>
+            <button onClick={handleFavorite} className="btn-favorite">
+              {favorites.has(auto.id) ? "Remove from Favorites" : "Add to Favorites"}
             </button>
           </div>
         </div>
