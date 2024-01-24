@@ -1,14 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { CSSTransition } from "react-transition-group";
 import "./App.css";
 
 export function NieuweAuto(props) {
   const [auto, setAuto] = useState({
     brand: "",
     model: "",
-    year: "", 
-    color: "", 
+    year: "",
+    color: "",
     price: "",
   });
+
+  const [showMessage, setShowMessage] = useState(false);
 
   const saveAuto = (event) => {
     event.preventDefault();
@@ -26,8 +29,21 @@ export function NieuweAuto(props) {
     }).then((response) => {
       if (response.ok) {
         props.autosRefreshHandler();
-        // Redirect to the homepage using window.location
-        window.location.href = "/";
+        setShowMessage(true);
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 3000);
+
+        // Clear the form
+        setAuto({
+          brand: "",
+          model: "",
+          year: "",
+          color: "",
+          price: "",
+        });
       }
     });
   };
@@ -122,6 +138,11 @@ export function NieuweAuto(props) {
         <button onClick={saveAuto} className="btn-primary">
           SAVE
         </button>
+
+        {/* Success message transition */}
+        <CSSTransition in={showMessage} timeout={300} classNames="fade" unmountOnExit>
+          <div className="success-message">Auto created!</div>
+        </CSSTransition>
       </form>
     </section>
   );
