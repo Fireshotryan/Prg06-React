@@ -90,25 +90,34 @@ export function Auto({ auto, autosRefreshHandler }) {
                 />
               </label>
               <label className="block mb-2">
-                Year:
-                <input
-                  type="text"
-                  value={editedAuto.year}
-                  name="year"
-                  onChange={handleChange}
-                  className="border rounded-md px-2 py-1 w-full focus:outline-none focus:border-blue-500"
-                />
-              </label>
-              <label className="block mb-2">
-                Color:
-                <input
-                  type="text"
-                  value={editedAuto.color}
-                  name="color"
-                  onChange={handleChange}
-                  className="border rounded-md px-2 py-1 w-full focus:outline-none focus:border-blue-500"
-                />
-              </label>
+  Year:
+  <select
+    value={editedAuto.year}
+    name="year"
+    onChange={handleChange}
+    className="border rounded-md px-2 py-1 w-full focus:outline-none focus:border-blue-500"
+  >
+    <option value="" disabled>Select a year</option>
+    {[...Array(2025 - 1990).keys()].map((i) => (
+      <option key={1990 + i} value={1990 + i}>
+        {1990 + i}
+      </option>
+    ))}
+  </select>
+</label>
+<select
+  value={editedAuto.color}
+  name="color"
+  onChange={handleChange}
+  className="border rounded-md px-2 py-1 w-full focus:outline-none focus:border-blue-500"
+>
+  <option value="" disabled>Select Color</option>
+  <option value="red">Red</option>
+  <option value="blue">Blue</option>
+  <option value="green">Green</option>
+  {/* Add more color options as needed */}
+</select>
+
               <label className="block mb-2">
                 Price:
                 <input

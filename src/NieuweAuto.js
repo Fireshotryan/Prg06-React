@@ -5,13 +5,16 @@ export function NieuweAuto(props) {
   const [auto, setAuto] = useState({
     brand: "",
     model: "",
-    year: "",
-    color: "",
+    year: "", 
+    color: "", 
     price: "",
   });
 
   const saveAuto = (event) => {
     event.preventDefault();
+
+    // Parse the year to an integer
+    auto.year = parseInt(auto.year, 10);
 
     fetch("http://145.24.222.71:8000/autos", {
       method: "POST",
@@ -70,27 +73,38 @@ export function NieuweAuto(props) {
           <label htmlFor="year" className="block text-sm font-medium text-gray-600">
             Year:
           </label>
-          <input
-            type="text"
+          <select
             id="year"
             name="year"
             value={auto.year}
             onChange={onChangeHandler}
             className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:border-blue-500"
-          />
+          >
+            <option value="" disabled>Select a year</option>
+            {[...Array(2025 - 1990).keys()].map((i) => (
+              <option key={1990 + i} value={1990 + i}>
+                {1990 + i}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label htmlFor="color" className="block text-sm font-medium text-gray-600">
             Color:
           </label>
-          <input
-            type="text"
+          <select
             id="color"
             name="color"
             value={auto.color}
             onChange={onChangeHandler}
             className="mt-1 p-2 border rounded-md w-full focus:outline-none focus:border-blue-500"
-          />
+          >
+            <option value="" disabled>Select a color</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            {/* ... (add more colors) */}
+          </select>
         </div>
         <div className="mb-4">
           <label htmlFor="price" className="block text-sm font-medium text-gray-600">

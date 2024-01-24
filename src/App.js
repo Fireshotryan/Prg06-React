@@ -15,6 +15,7 @@ export function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [yearRange, setYearRange] = useState({ min: 1990, max: 2024 });
 
   const fetchData = async () => {
     try {
@@ -33,7 +34,8 @@ export function App() {
   const filteredAutos = autos.filter((auto) => {
     const matchesSearch = auto.brand.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesColor = selectedColor ? auto.color.toLowerCase() === selectedColor.toLowerCase() : true;
-    return matchesSearch && matchesColor;
+    const matchesYear = auto.year >= yearRange.min && auto.year <= yearRange.max;
+    return matchesSearch && matchesColor && matchesYear;
   });
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -76,76 +78,116 @@ export function App() {
     setCurrentPage(1); // Reset to the first page when the color selection changes
   };
 
-  return (
+  const handleYearChange = (e) => {
+    const selectedValue = e.target.value;
+    setYearRange({
+      min: selectedValue === "All Years" ? 1990 : parseInt(selectedValue, 10),
+      max: selectedValue === "All Years" ? 2024 : parseInt(selectedValue, 10),
+    });
+    setCurrentPage(1);
+  };
+
+const fixedElementHeight = "40px";
+
+return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={showAutos} />
+        <Route
+          path="/"
+          element={<Layout />}
+        >
+          <Route
+            index
+            element={
+              <>
+                {/* Search and Color Filter */}
+                <div className="flex justify-center my-4" style={{ height: fixedElementHeight }}>
+                  <input
+                    type="text"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="border rounded-md px-2 py-1 mr-2 focus:outline-none focus:border-blue-500"
+                  />
+                  <select
+                    value={selectedColor}
+                    onChange={handleColorChange}
+                    className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">All Colors</option>
+                    {/* Replace the following colors with your actual color options */}
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    {/* ... (add more colors) */}
+                  </select>
+                </div>
+
+                {/* Year Range Search */}
+                <div className="flex justify-center my-4" style={{ height: fixedElementHeight }}>
+  <label className="text-lg font-bold mr-2">Select Year:</label>
+  <select
+    value={yearRange.min === 1990 && yearRange.max === 2024 ? "All Years" : yearRange.min}
+    onChange={handleYearChange}
+    name="min"
+    className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
+  >
+    <option value="All Years">All Years</option>
+    {[...Array(2025 - 1990).keys()].map((i) => (
+      <option key={1990 + i} value={1990 + i}>
+        {1990 + i}
+      </option>
+    ))}
+  </select>
+</div>
+
+                {/* Pagination */}
+                <div className="flex justify-center my-4" style={{ height: fixedElementHeight }}>
+                  <button
+                    onClick={goToFirstPage}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                  >
+                    First Page
+                  </button>
+                  <button
+                    onClick={goToPreviousPage}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                  >
+                    Previous Page
+                  </button>
+                  {paginationButtons.map((button, index) => (
+                    <span key={index} className="mx-1">
+                      {button}
+                    </span>
+                  ))}
+                  <button
+                    onClick={goToNextPage}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                  >
+                    Next Page
+                  </button>
+                  <button
+                    onClick={goToLastPage}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
+                  >
+                    Last Page
+                  </button>
+                </div>
+
+                {/* Autos */}
+                {showAutos}
+              </>
+            }
+          />
           <Route path="create" element={<NieuweAuto autosRefreshHandler={fetchData} />} />
           <Route path="autos/:id" element={<AutoDetail />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
-
-      {/* Pagination */}
-      <div className="flex justify-center my-4">
-        <input
-          type="text"
-          placeholder="Search by name"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="border rounded-md px-2 py-1 mr-2 focus:outline-none focus:border-blue-500"
-        />
-        <select
-          value={selectedColor}
-          onChange={handleColorChange}
-          className="border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
-        >
-          <option value="">All Colors</option>
-          {/* Replace the following colors with your actual color options */}
-          <option value="red">Red</option>
-          <option value="blue">Blue</option>
-          <option value="green">Green</option>
-          {/* ... (add more colors) */}
-        </select>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center my-4">
-        <button
-          onClick={goToFirstPage}
-          disabled={currentPage === 1}
-          className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          First Page
-        </button>
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-          className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Previous Page
-        </button>
-        {paginationButtons.map((button, index) => (
-          <span key={index} className="mx-1">
-            {button}
-          </span>
-        ))}
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Next Page
-        </button>
-        <button
-          onClick={goToLastPage}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 mx-1 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Last Page
-        </button>
-      </div>
     </BrowserRouter>
   );
 }
