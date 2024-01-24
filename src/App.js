@@ -33,23 +33,48 @@ export function App() {
     fetchData();
   }, []);
 
-  const toggleFavorite = (autoId) => {
+  const toggleFavorite = async (autoId) => {
     const newFavorites = new Set(favorites);
-
+  
     if (newFavorites.has(autoId)) {
       newFavorites.delete(autoId);
     } else {
       newFavorites.add(autoId);
     }
-
+  
     setFavorites(newFavorites);
+  
+    try {
+      await fetch(`${URI_COLLECTION}/${autoId}`, {
+        method: "PATCH", // Change the method to PATCH
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ favorite: newFavorites.has(autoId) }),
+      });
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
   };
-
-
-  const removeFromFavorites = (autoId) => {
+  
+  const removeFromFavorites = async (autoId) => {
     const newFavorites = new Set(favorites);
     newFavorites.delete(autoId);
     setFavorites(newFavorites);
+  
+    try {
+      await fetch(`${URI_COLLECTION}/${autoId}`, {
+        method: "PATCH", // Change the method to PATCH
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ favorite: false }),
+      });
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
   };
 
   const filteredAutos = autos.filter((auto) => {
