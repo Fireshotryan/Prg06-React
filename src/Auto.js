@@ -16,7 +16,7 @@ export function Auto({ auto, autosRefreshHandler, toggleFavorite, favorites }) {
     event.preventDefault();
   
     fetch(auto._links.self.href, {
-      method: "PATCH", // Change the method to PATCH
+      method: "PUT", 
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
