@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import "./App.css";
 
 const URI_COLLECTION = "http://145.24.222.71:8000/autos";
@@ -9,7 +9,7 @@ export function AutoDetail() {
 
   const [auto, setAutos] = useState(null);
 
-  const loadJson = () => {
+  const loadJson = useCallback(() => {
     fetch(URI_COLLECTION + "/" + params.id, {
       method: "GET",
       headers: {
@@ -18,11 +18,11 @@ export function AutoDetail() {
     })
       .then((response) => response.json())
       .then((result) => setAutos(result));
-  };
+  }, [params.id]);
 
   useEffect(() => {
     loadJson();
-  }, []);
+  }, [loadJson]);
 
   return (
     <section className="container mx-auto mt-10">
